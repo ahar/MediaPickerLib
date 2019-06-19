@@ -78,7 +78,7 @@ class Gallery : AppCompatActivity() {
     private fun setupViewPager(viewPager: ViewPager?) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         if (mode == 1 || mode == 2) {
-            val fragment = VideoFragment()
+            val fragment = ImageFragment()
             val bundle = Bundle().apply {
                 putStringArrayList("excludePath", dirsExcludeName)
             }

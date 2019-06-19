@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.coursion.freakycoder.mediapicker.adapters.BucketsAdapter
 import com.coursion.freakycoder.mediapicker.galleries.OpenGallery
 import com.coursion.mediapickerlib.R
+import timber.log.Timber
 import java.io.File
 import java.util.ArrayList
 import java.util.HashSet
@@ -148,7 +149,10 @@ class ImageFragment : Fragment() {
                 }
                 val path = cursor.getString(cursor.getColumnIndex(projection2[1]))
                 file = File(path)
-                if (file.exists() && !albumSet.contains(path)) {
+                Timber.d("????!!!!! path " + path)
+                if (file.exists() && !albumSet.contains(path) && !albumInExcludedDir(path)
+                        && !imageInExcludedDir(file.path)) {
+                    Timber.d("????!!!!! path added " + path)
                     imagesTEMP!!.add(path)
                     albumSet.add(path)
                     selected.add(false)
