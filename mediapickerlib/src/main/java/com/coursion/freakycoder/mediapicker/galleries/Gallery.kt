@@ -17,6 +17,7 @@ import com.coursion.freakycoder.mediapicker.fragments.VideoFragment
 import com.coursion.freakycoder.mediapicker.helper.Util
 import com.coursion.mediapickerlib.R
 import kotlinx.android.synthetic.main.activity_gallery.*
+import kotlinx.android.synthetic.main.album_item.*
 import java.util.ArrayList
 
 class Gallery : AppCompatActivity() {
@@ -27,6 +28,7 @@ class Gallery : AppCompatActivity() {
         var maxSelection: Int = 0
         var mode: Int = 0
         var tabBarHidden = false
+        var dirsExcludeName: ArrayList<String>? = null
     }
 
     open lateinit var fab: FloatingActionButton
@@ -54,6 +56,8 @@ class Gallery : AppCompatActivity() {
         tabBarHidden = intent.extras!!.getBoolean("tabBarHidden")
         title = title
         selectionTitle = 0
+        dirsExcludeName = intent.extras!!.getStringArrayList("excludePath")
+
         // Set the ViewPager and TabLayout
         setupViewPager(viewPager)
         tabLayout!!.setupWithViewPager(viewPager)
@@ -74,10 +78,22 @@ class Gallery : AppCompatActivity() {
     private fun setupViewPager(viewPager: ViewPager?) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         if (mode == 1 || mode == 2) {
-            adapter.addFragment(ImageFragment(), "Images")
+            val fragment = VideoFragment()
+            val bundle = Bundle().apply {
+                putStringArrayList("excludePath", dirsExcludeName)
+            }
+            fragment.setArguments(bundle)
+            adapter.addFragment(fragment, "Images")
         }
-        if (mode == 1 || mode == 3)
-            adapter.addFragment(VideoFragment(), "Videos")
+        if (mode == 1 || mode == 3) {
+            val fragment = VideoFragment()
+            val bundle = Bundle().apply {
+                putStringArrayList("excludePath", dirsExcludeName)
+            }
+            fragment.setArguments(bundle)
+            adapter.addFragment(fragment, "Videos")
+        }
+
         viewPager!!.adapter = adapter
 
         if (tabBarHidden) {

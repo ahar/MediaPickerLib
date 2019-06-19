@@ -1,4 +1,4 @@
-package com.coursion.mediapickerlib
+package com.coursionexample.mediapickerlib
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

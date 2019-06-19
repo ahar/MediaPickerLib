@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import com.coursion.freakycoder.mediapicker.adapters.BucketsAdapter
 import com.coursion.freakycoder.mediapicker.galleries.OpenGallery
 import com.coursion.mediapickerlib.R
-import kotlinx.android.synthetic.main.fragment_image.*
 
 import java.io.File
 import java.util.ArrayList
@@ -34,6 +33,7 @@ class VideoFragment : Fragment() {
     private val bitmapList = ArrayList<String>()
     private val projection = arrayOf(MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA)
     private val projection2 = arrayOf(MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA)
+    private var excludeDirsName: MutableList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +108,11 @@ class VideoFragment : Fragment() {
     }
 
     private fun getVideoBuckets() {
+        val excluded = arguments?.getStringArrayList("excludePath")
+        if (excluded != null) {
+            excludeDirsName.addAll(0, excluded)
+        }
+
         val cursor = context!!.contentResolver
                 .query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
                         null, null,
@@ -124,7 +129,8 @@ class VideoFragment : Fragment() {
                 val album = cursor.getString(cursor.getColumnIndex(projection[0]))
                 val image = cursor.getString(cursor.getColumnIndex(projection[1]))
                 file = File(image)
-                if (file.exists() && !albumSet.contains(album)) {
+                if (file.exists() && !albumSet.contains(album) && !albumInExcludedDir(album)
+                        && !videoInExcludedDir(file.path)) {
                     bucketNamesTEMP.add(album)
                     bitmapListTEMP.add(image)
                     albumSet.add(album)
@@ -139,6 +145,26 @@ class VideoFragment : Fragment() {
         bitmapList.clear()
         bucketNames.addAll(bucketNamesTEMP)
         bitmapList.addAll(bitmapListTEMP)
+    }
+
+    private fun albumInExcludedDir(album: String?): Boolean {
+        var result = false
+        for (excludedDirName in excludeDirsName) {
+            if (album!!.equals(excludedDirName)) {
+                result = true
+            }
+        }
+        return result
+    }
+
+    private fun videoInExcludedDir(video: String?): Boolean {
+        var result = false
+        for (excludedDirName in excludeDirsName) {
+            if (video!!.contains(excludedDirName)) {
+                result = true
+            }
+        }
+        return result
     }
 
     interface ClickListener {

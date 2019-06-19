@@ -33,6 +33,7 @@ class ImageFragment : Fragment() {
     private val projection2 = arrayOf(MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA)
     private var bucketNames: MutableList<String> = ArrayList()
     private val bitmapList = ArrayList<String>()
+    private var excludeDirsName: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,10 @@ class ImageFragment : Fragment() {
     }
 
     private fun getPicBuckets() {
+        val excluded = arguments?.getStringArrayList("excludePath")
+        if (excluded != null) {
+            excludeDirsName.addAll(0, excluded)
+        }
         val cursor = context!!.contentResolver
                 .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_ADDED)
         val bucketNamesTEMP = ArrayList<String>(cursor!!.count)
@@ -88,7 +93,8 @@ class ImageFragment : Fragment() {
                 val album = cursor.getString(cursor.getColumnIndex(projection[0]))
                 val image = cursor.getString(cursor.getColumnIndex(projection[1]))
                 file = File(image)
-                if (file.exists() && !albumSet.contains(album)) {
+                if (file.exists() && !albumSet.contains(album) && !albumInExcludedDir(album)
+                        && !imageInExcludedDir(file.path)) {
                     bucketNamesTEMP.add(album)
                     bitmapListTEMP.add(image)
                     albumSet.add(album)
@@ -103,6 +109,26 @@ class ImageFragment : Fragment() {
         bitmapList.clear()
         bucketNames.addAll(bucketNamesTEMP)
         bitmapList.addAll(bitmapListTEMP)
+    }
+
+    private fun albumInExcludedDir(album: String?): Boolean {
+        var result = false
+        for (excludedDirName in excludeDirsName) {
+            if (album!!.equals(excludedDirName)) {
+                result = true
+            }
+        }
+        return result
+    }
+
+    private fun imageInExcludedDir(video: String?): Boolean {
+        var result = false
+        for (excludedDirName in excludeDirsName) {
+            if (video!!.contains(excludedDirName)) {
+                result = true
+            }
+        }
+        return result
     }
 
     fun getPictures(bucket: String) {

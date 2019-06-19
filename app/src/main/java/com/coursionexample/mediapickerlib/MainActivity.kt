@@ -1,4 +1,4 @@
-package com.coursion.mediapickerlib
+package com.coursionexample.mediapickerlib
 
 import android.Manifest
 import android.content.Intent
@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
                 // Mode 1 for both images and videos selection, 2 for images only and 3 for videos!
                 intent.putExtra("mode", 1)
                 intent.putExtra("maxSelection", 3) // Optional
-                intent.putExtra("tabBarHidden", true) //Optional - default value is false
+                intent.putExtra("tabBarHidden", false) //Optional - default value is false
+//                intent.putStringArrayListExtra("excludePath", arrayListOf("/Download/"));
                 startActivityForResult(intent, OPEN_MEDIA_PICKER)
             }
         }

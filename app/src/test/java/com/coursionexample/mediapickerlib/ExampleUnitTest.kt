@@ -1,4 +1,4 @@
-package com.coursion.mediapickerlib
+package com.coursionexample.mediapickerlib
 
 import org.junit.Test
 
