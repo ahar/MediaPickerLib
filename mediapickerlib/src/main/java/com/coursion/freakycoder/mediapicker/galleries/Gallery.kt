@@ -83,7 +83,7 @@ class Gallery : AppCompatActivity() {
                 putStringArrayList("excludePath", dirsExcludeName)
             }
             fragment.setArguments(bundle)
-            adapter.addFragment(fragment, "Images")
+            adapter.addFragment(fragment, resources.getString(R.string.images))
         }
         if (mode == 1 || mode == 3) {
             val fragment = VideoFragment()
@@ -91,7 +91,7 @@ class Gallery : AppCompatActivity() {
                 putStringArrayList("excludePath", dirsExcludeName)
             }
             fragment.setArguments(bundle)
-            adapter.addFragment(fragment, "Videos")
+            adapter.addFragment(fragment, resources.getString(R.string.videos))
         }
 
         viewPager!!.adapter = adapter

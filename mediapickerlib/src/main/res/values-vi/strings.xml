@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediaPickerLib</string>
+    <string name="images">Hình ảnh</string>
+    <string name="videos">Video</string>
+</resources>
